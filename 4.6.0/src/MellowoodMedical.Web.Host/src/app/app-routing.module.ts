@@ -8,7 +8,7 @@ import { UsersComponent } from './users/users.component';
 import { TenantsComponent } from './tenants/tenants.component';
 import { RolesComponent } from 'app/roles/roles.component';
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
-import { CMSContentComponent } from './cmscontent/cmscontent.component'
+import { CMSContentComponent } from './cmscontent/cmscontent.component';
 
 @NgModule({
     imports: [

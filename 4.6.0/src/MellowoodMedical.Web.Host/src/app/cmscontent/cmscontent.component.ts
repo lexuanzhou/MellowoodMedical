@@ -1,5 +1,6 @@
 ﻿import { Component, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { CMSContentProxy } from '../../shared/service-proxies/service-proxies';
 
 @Component({
     templateUrl: './cmscontent.component.html'
@@ -7,8 +8,16 @@ import { AppComponentBase } from '@shared/app-component-base';
 
 export class CMSContentComponent extends AppComponentBase {
     constructor(
-        injector: Injector
+        injector: Injector,
+        private _cmsService: CMSServiceProxy
     ) {
         super(injector);
+    }
+
+    loadCMS() {
+        this._cmsService.getListAsync()
+            .subscribe((result.ListResultDtoofCMSListDto) => {
+                this.cms = result.items;
+            });
     }
 }

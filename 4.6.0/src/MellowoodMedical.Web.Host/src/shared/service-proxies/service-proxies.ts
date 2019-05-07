@@ -141,7 +141,7 @@ export class AccountServiceProxy {
 
 /** New proxy for the CMSContent */
 @Injectable()
-export class CMSContentProxy {
+export class CMSServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: (key: string, value: any) => any = undefined;
@@ -154,7 +154,7 @@ export class CMSContentProxy {
     /**
      * @return Success
      */
-    getAll(): Observable<ListResultDtoOfPermissionDto> {
+    getAll(): Observable<ListResultDtoOfCMSListDto> {
         let url_ = this.baseUrl + "/api/services/app/CMSService/getCMSContent";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -173,14 +173,14 @@ export class CMSContentProxy {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<ListResultDtoOfPermissionDto>><any>_observableThrow(e);
+                    return <Observable<ListResultDtoOfCMSListDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ListResultDtoOfPermissionDto>><any>_observableThrow(response_);
+                return <Observable<ListResultDtoOfCMSListDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<ListResultDtoOfPermissionDto> {
+    protected processGetAll(response: HttpResponseBase): Observable<ListResultDtoOfCMSListDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -191,7 +191,7 @@ export class CMSContentProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
                 let result200: any = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 ? ListResultDtoOfPermissionDto.fromJS(resultData200) : new ListResultDtoOfPermissionDto();
+                result200 = resultData200 ? ListResultDtoOfCMSListDto.fromJS(resultData200) : new ListResultDtoOfCMSListDto();
                 return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -207,7 +207,7 @@ export class CMSContentProxy {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ListResultDtoOfPermissionDto>(<any>null);
+        return _observableOf<ListResultDtoOfCMSListDto>(<any>null);
     }
 }
 
@@ -1999,6 +1999,109 @@ export class ChangeUiThemeInput implements IChangeUiThemeInput {
 
 export interface IChangeUiThemeInput {
     theme: string;
+}
+
+
+export class ListResultDtoOfCMSListDto implements IListResultDtoOfCMSListDto {
+    items: CMScontentDto[];
+
+    constructor(data?: IListResultDtoOfCMSListDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            if (data["items"] && data["items"].constructor === Array) {
+                this.items = [] as any;
+                for (let item of data["items"])
+                    this.items.push(CMScontentDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ListResultDtoOfCMSListDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ListResultDtoOfCMSListDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (this.items && this.items.constructor === Array) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+
+    clone(): ListResultDtoOfCMSListDto {
+        const json = this.toJSON();
+        let result = new ListResultDtoOfCMSListDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IListResultDtoOfCMSListDto {
+    items: CMScontentDto[];
+}
+
+export class CMScontentDto implements ICMScontentDto {
+    id: number;
+    pageName: string;
+    pageContent: string;
+
+    constructor(data?: ICMScontentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.pageName = data["pageName"];
+            this.pageContent = data["pageContent"];
+        }
+    }
+
+    static fromJS(data: any): CMScontentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CMScontentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["pageName"] = this.pageName;
+        data["pageContent"] = this.pageContent;
+        return data;
+    }
+
+    clone(): CMScontentDto {
+        const json = this.toJSON();
+        let result = new CMScontentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICMScontentDto {
+    id: number;
+    pageName: string;
+    pageContent: string;
 }
 
 export class CreateRoleDto implements ICreateRoleDto {

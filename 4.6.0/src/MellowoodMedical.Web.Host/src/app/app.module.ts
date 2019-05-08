@@ -80,7 +80,7 @@ import { CMSContentComponent } from './cmscontent/cmscontent.component';
     SharedModule,
     NgxPaginationModule
   ],
-  providers: [],
+   providers: [],
   entryComponents: [
     // tenants
     CreateTenantDialogComponent,

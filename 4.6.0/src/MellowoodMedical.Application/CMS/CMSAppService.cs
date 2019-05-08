@@ -22,17 +22,17 @@ namespace MellowoodMedical.CMS
 			_cmsRepository = cmsRepository;
 		}
 
-		public async Task<ListResultDto<CMSListDto>> GetListAsync(GetCMSListInput input)
+		public async Task<ListResultDto<CMScontentDto>> GetListAsync(GetCMScontentInput input)
 		{
 			var cms = await _cmsRepository
 				.GetAll()
 				.ToListAsync();
-			return new ListResultDto<CMSListDto>(cms.MapTo<List<CMSListDto>>());
+			return new ListResultDto<CMScontentDto>(cms.MapTo<List<CMScontentDto>>());
 		}
 
 		public async Task CreateAsync(CreateCMSInput input)
 		{
-			var @cms = CMS.Create(input.pageId, input.PageName, input.PageContent);
+			var @cms = CMS.Create(input.PageId, input.PageName, input.PageContent);
 			await _cmsManager.CreateAsync(@cms);
 		}
 

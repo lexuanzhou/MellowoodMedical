@@ -7,8 +7,9 @@ using System.Text;
 namespace MellowoodMedical.CMS.Dtos
 {
 	[AutoMapFrom(typeof(CMS))]
-	public class CMSListDto : FullAuditedEntityDto<Guid>
+	public class CMScontentDto : FullAuditedEntityDto<Guid>
 	{
+		public int PageId { get; set; }
 		public string PageName { get; set; }
 
 		public string PageContent { get; set; }

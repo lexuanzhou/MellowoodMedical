@@ -8,7 +8,7 @@ namespace MellowoodMedical.CMS.Dtos
 	public class CreateCMSInput
 	{
 		[Required]
-		public int pageId { get; set; }
+		public int PageId { get; set; }
 
 		public string PageName { get; set; }
 

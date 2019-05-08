@@ -154,7 +154,7 @@ export class CMSServiceProxy {
     /**
      * @return Success
      */
-    getAll(): Observable<ListResultDtoOfCMSListDto> {
+    getListAsync(): Observable<ListResultDtoOfCMSListDto> {
         let url_ = this.baseUrl + "/api/services/app/CMSService/getCMSContent";
         url_ = url_.replace(/[?&]$/, "");
 

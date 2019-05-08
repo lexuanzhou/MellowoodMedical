@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MellowoodMedical.CMS.Dtos
 {
-	public class GetCMSListInput
+	public class GetCMScontentInput
 	{
 		public int PageId { get; set; }
 	}

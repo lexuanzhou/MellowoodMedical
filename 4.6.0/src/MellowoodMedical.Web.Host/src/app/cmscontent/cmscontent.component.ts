@@ -11,7 +11,7 @@ import { PagedListingComponentBase, PagedRequestDto } from "shared/paged-listing
 export class CMSContentComponent extends PagedListingComponentBase<CMScontentDto> {
     
 
-    cms: CMScontentDto[] = [];
+    cmses: CMScontentDto[] = [];
 
     constructor(
         injector: Injector,
@@ -21,16 +21,16 @@ export class CMSContentComponent extends PagedListingComponentBase<CMScontentDto
     }
 
     protected list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
-        throw new Error("Method not implemented.");
+        this.loadCMS(request);
     }
     protected delete(entity: CMScontentDto): void {
         throw new Error("Method not implemented.");
     }
 
-    loadCMS() {
-        this._cmsService.getListAsync()
-            .subscribe((result: ListResultDtoOfCMSListDto) => {
-                this.cms = result.items;
+    loadCMS(request) {
+        this._cmsService.getAsync(request.pageId)
+            .subscribe((result: CMScontentDto) => {
+                this.cmses = result.items;
             });
     }
 }

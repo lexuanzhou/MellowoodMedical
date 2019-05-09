@@ -10,6 +10,7 @@ namespace MellowoodMedical.CMS.Dtos
 	public class CMScontentDto : FullAuditedEntityDto<Guid>
 	{
 		public int PageId { get; set; }
+
 		public string PageName { get; set; }
 
 		public string PageContent { get; set; }

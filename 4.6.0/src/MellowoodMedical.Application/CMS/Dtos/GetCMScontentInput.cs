@@ -6,6 +6,6 @@ namespace MellowoodMedical.CMS.Dtos
 {
 	public class GetCMScontentInput
 	{
-		public int PageId { get; set; }
+		public long PageId { get; set; }
 	}
 }

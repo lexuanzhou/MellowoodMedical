@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MellowoodMedical.CMS.Dtos
 {
-	public class CreateCMSInput
+	public class InsertOrUpdateCMSInput
 	{
 		[Required]
 		public int PageId { get; set; }

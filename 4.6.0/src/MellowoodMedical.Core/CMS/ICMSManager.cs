@@ -6,9 +6,9 @@ namespace MellowoodMedical.CMS
 {
 	public interface ICMSManager : IDomainService
 	{
-		Task<CMS> GetAsync(Guid id);
+		Task<CMS> GetAsync(long PageId);
 
-		Task CreateAsync(CMS @cms);
+		Task InsertOrUpdateAsync(CMS @cms);
 
 	}
 }

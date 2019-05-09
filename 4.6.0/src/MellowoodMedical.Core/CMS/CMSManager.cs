@@ -10,17 +10,17 @@ namespace MellowoodMedical.CMS
 	public class CMSManager : ICMSManager
 	{
 
-		private readonly IRepository<CMS, Guid> _cmsRepository;
+		private readonly IRepository<CMS,long> _cmsRepository;
 
-		public CMSManager(IRepository<CMS,Guid> cmsRepository)
+		public CMSManager(IRepository<CMS,long> cmsRepository)
 		{
 			_cmsRepository = cmsRepository;
 		}
 		
 
-		public async Task<CMS> GetAsync(Guid id)
+		public async Task<CMS> GetAsync(long PageId)
 		{
-			var @cms = await _cmsRepository.FirstOrDefaultAsync(id);
+			var @cms = await _cmsRepository.FirstOrDefaultAsync(PageId);
 			if (@cms == null)
 			{
 				throw new Abp.UI.UserFriendlyException("Could not found the event, maybe it's deleted!");
@@ -28,9 +28,9 @@ namespace MellowoodMedical.CMS
 			return cms;
 		}
 
-		public async Task CreateAsync(CMS @cms)
+		public async Task InsertOrUpdateAsync(CMS @cms)
 		{
-			await _cmsRepository.InsertAsync(@cms);
+			await _cmsRepository.InsertOrUpdateAndGetIdAsync(@cms);
 		}
 	}
 }

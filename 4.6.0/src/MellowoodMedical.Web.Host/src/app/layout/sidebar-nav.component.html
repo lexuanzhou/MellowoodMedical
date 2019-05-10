@@ -54,14 +54,13 @@
                             </ul>
                         </li>
                     </ng-template>
-
                 </ul>
             </li>
         </ng-template>
+        <li *ngFor="let cms of cmses">
+            <a  [routerLink]="['/app/cmscontent', cms.pageId]">{{ cms.pageName }}</a>
+        </li>
     </ul>
 </div>
-<li *ngFor="let cms of cmses">
-    <a [routerLink]="['/app/cmscontent', cms.pageId]">{{ cms.pageName }}</a>
-</li>
 
 

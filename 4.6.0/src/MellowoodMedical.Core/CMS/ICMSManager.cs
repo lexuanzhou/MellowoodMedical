@@ -2,7 +2,7 @@
 using Abp.Domain.Services;
 using System.Threading.Tasks;
 
-namespace MellowoodMedical.CMS
+namespace MellowoodMedical.CMSES
 {
 	public interface ICMSManager : IDomainService
 	{

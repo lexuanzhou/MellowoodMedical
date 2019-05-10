@@ -1,15 +1,12 @@
-﻿using Abp.Application.Services.Dto;
-using Abp.AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Abp.AutoMapper;
+using Abp.Domain.Entities.Auditing;
 
-namespace MellowoodMedical.CMS.Dtos
+namespace MellowoodMedical.CMSES.Dtos
 {
 	[AutoMapFrom(typeof(CMS))]
-	public class CMScontentDto : FullAuditedEntityDto<Guid>
+	public class CMScontentDto : FullAuditedEntity<long>
 	{
-		public int PageId { get; set; }
+		public long PageId { get; set; }
 
 		public string PageName { get; set; }
 

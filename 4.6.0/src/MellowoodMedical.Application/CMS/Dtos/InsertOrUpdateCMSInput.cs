@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace MellowoodMedical.CMS.Dtos
+namespace MellowoodMedical.CMSES.Dtos
 {
 	public class InsertOrUpdateCMSInput
 	{

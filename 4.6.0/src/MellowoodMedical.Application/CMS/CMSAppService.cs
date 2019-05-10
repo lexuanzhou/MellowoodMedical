@@ -4,7 +4,7 @@ using Abp.AutoMapper;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.UI;
-using MellowoodMedical.CMS.Dtos;
+using MellowoodMedical.CMSES.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MellowoodMedical.CMS
+namespace MellowoodMedical.CMSES
 {
 	[AbpAuthorize]
 	public class CMSAppService : MellowoodMedicalAppServiceBase, ICMSAppservice

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Events.Bus;
 
-namespace MellowoodMedical.CMS
+namespace MellowoodMedical.CMSES
 {
 	public class CMSManager : ICMSManager
 	{

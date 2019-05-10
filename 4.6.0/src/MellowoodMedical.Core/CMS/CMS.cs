@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
-namespace MellowoodMedical.CMS
+namespace MellowoodMedical.CMSES
 {
-	[Table("CMSContent")]
+	[Table("AppCmses")]
 	public class CMS : FullAuditedEntity<long>
 	{
 		public virtual long PageId { get; set; }

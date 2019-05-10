@@ -12,6 +12,7 @@
                     <i *ngIf="menuItem.icon" class="material-icons">{{menuItem.icon}}</i>
                     <span>{{menuItem.name}}</span>
                 </a>
+
                 <!-- Has child menu items (so, this is a parent menu) -->
                 <a href="javascript:void(0);" [ngClass]="{'menu-toggle': menuItem.items.length}" *ngIf="menuItem.items.length">
                     <i *ngIf="menuItem.icon" class="material-icons">{{menuItem.icon}}</i>
@@ -53,8 +54,14 @@
                             </ul>
                         </li>
                     </ng-template>
+                    <li *ngFor="let cms of cmses">
+                        <a [routerLink]="['/app/cmscontent', cms.pageId]">{{ cms.pageName }}</a>
+                    </li>
                 </ul>
             </li>
-        </ng-template>
+        </ng-template>                          
+
     </ul>
 </div>
+
+

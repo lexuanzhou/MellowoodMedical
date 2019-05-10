@@ -23,7 +23,7 @@ import { CMSContentComponent } from './cmscontent/cmscontent.component';
                     { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
                     { path: 'about', component: AboutComponent },
                     { path: 'update-password', component: ChangePasswordComponent },
-                    { path: 'cmscontent', component: CMSContentComponent }
+                    { path: 'cmscontent/:pageId', component: CMSContentComponent }
                 ]
             }
         ])

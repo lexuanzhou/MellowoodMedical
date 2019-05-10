@@ -1,13 +1,17 @@
-import { Component, Injector, ViewEncapsulation } from '@angular/core';
+import { Component, Injector, ViewEncapsulation, OnInit} from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { MenuItem } from '@shared/layout/menu-item';
+import { CMSServiceProxy, ListResultDtoOfCMScontentDto, CMScontentDto } from '../../shared/service-proxies/service-proxies';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
     templateUrl: './sidebar-nav.component.html',
     selector: 'sidebar-nav',
     encapsulation: ViewEncapsulation.None
 })
-export class SideBarNavComponent extends AppComponentBase {
+export class SideBarNavComponent extends AppComponentBase implements OnInit{
+
+    cmses: CMScontentDto[] = [];
 
     menuItems: MenuItem[] = [
         new MenuItem(this.l('HomePage'), '', 'home', '/app/home'),
@@ -16,7 +20,6 @@ export class SideBarNavComponent extends AppComponentBase {
         new MenuItem(this.l('Users'), 'Pages.Users', 'people', '/app/users'),
         new MenuItem(this.l('Roles'), 'Pages.Roles', 'local_offer', '/app/roles'),
         new MenuItem(this.l('About'), '', 'info', '/app/about'),
-        new MenuItem(this.l('CMSContent'), '', 'event', '/app/cmscontent'),
 
         new MenuItem(this.l('MultiLevelMenu'), '', 'menu', '', [
             new MenuItem('ASP.NET Boilerplate', '', '', '', [
@@ -37,7 +40,9 @@ export class SideBarNavComponent extends AppComponentBase {
     ];
 
     constructor(
-        injector: Injector
+        injector: Injector,
+        private _cmsService: CMSServiceProxy,
+        private _activatedRoute: ActivatedRoute
     ) {
         super(injector);
     }
@@ -48,5 +53,16 @@ export class SideBarNavComponent extends AppComponentBase {
         }
 
         return true;
+    }
+
+    ngOnInit(): void {
+        this.loadCMS();
+    }
+
+    loadCMS() {
+        this._cmsService.getAll()
+            .subscribe((result: ListResultDtoOfCMScontentDto) => {
+                this.cmses = result.items;
+            });
     }
 }

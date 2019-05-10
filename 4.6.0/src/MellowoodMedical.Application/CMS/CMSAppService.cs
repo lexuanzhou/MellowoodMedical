@@ -26,7 +26,7 @@ namespace MellowoodMedical.CMS
 			_cmsRepository = cmsRepository;
 		}
 
-		public async Task<ListResultDto<CMScontentDto>> GetAllAsync()
+		public async Task<ListResultDto<CMScontentDto>> GetAll()
 		{
 			var cmses = await _cmsRepository
 				.GetAll()
@@ -40,7 +40,7 @@ namespace MellowoodMedical.CMS
 			return new ListResultDto<CMScontentDto>(cmses.MapTo<List<CMScontentDto>>());
 		}
 
-		public async Task<CMScontentDto> GetAsync(GetCMScontentInput input)
+		public async Task<CMScontentDto> GetCMSContent(GetCMScontentInput input)
 		{
 			var cms = await _cmsRepository
 				.GetAll()
@@ -54,7 +54,7 @@ namespace MellowoodMedical.CMS
 			return @cms.MapTo<CMScontentDto>();
 		}
 
-		public async Task InsertOrUpdateAsync(InsertOrUpdateCMSInput input)
+		public async Task InsertOrUpdateCMSContent(InsertOrUpdateCMSInput input)
 		{
 			var @cms = CMS.InsertOrUpdateAsync(input.PageId, input.PageName, input.PageContent);
 			await _cmsManager.InsertOrUpdateAsync(@cms);

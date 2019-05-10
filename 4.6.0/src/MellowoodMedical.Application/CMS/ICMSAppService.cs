@@ -10,11 +10,11 @@ namespace MellowoodMedical.CMS
 {
 	public interface  ICMSAppservice: IApplicationService
 	{
-		Task<ListResultDto<CMScontentDto>> GetAllAsync();
+		Task<ListResultDto<CMScontentDto>> GetAll();
 
-		Task<CMScontentDto> GetAsync(GetCMScontentInput input);
+		Task<CMScontentDto> GetCMSContent(GetCMScontentInput input);
 
-		Task InsertOrUpdateAsync(InsertOrUpdateCMSInput input);
+		Task InsertOrUpdateCMSContent(InsertOrUpdateCMSInput input);
 		
 	}
 }

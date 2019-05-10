@@ -139,12 +139,11 @@ export class AccountServiceProxy {
     }
 }
 
-/** New proxy for the CMSContent */
 @Injectable()
 export class CMSServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
-    protected jsonParseReviver: (key: string, value: any) => any = undefined;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
@@ -152,16 +151,13 @@ export class CMSServiceProxy {
     }
 
     /**
-     * @param id (optional)
      * @return Success
      */
-    getAsync(pageId: number): Observable<CMScontentDto> {
-        let url_ = this.baseUrl + "/api/services/app/CMSService/GetCMSContent?";
-        if (pageId !== undefined)
-            url_ += "pageId=" + encodeURIComponent("" + pageId) + "&";
+    getAll(): Observable<ListResultDtoOfCMScontentDto> {
+        let url_ = this.baseUrl + "/api/services/app/CMS/GetAll";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: any = {
+        let options_ : any = {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
@@ -169,135 +165,66 @@ export class CMSServiceProxy {
             })
         };
 
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_: any) => {
-            return this.processGet(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGet(<any>response_);
-                } catch (e) {
-                    return <Observable<CMScontentDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<CMScontentDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGet(response: HttpResponseBase): Observable<CMScontentDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-                (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } };
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 ? CMScontentDto.fromJS(resultData200) : new CMScontentDto();
-                return _observableOf(result200);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                return throwException("A server error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                return throwException("A server error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<CMScontentDto>(<any>null);
-    }
-
-    /**
-    * @return Success
-    */
-    getAllAsync(): Observable<ListResultDtoOfCMSListDto> {
-        let url_ = this.baseUrl + "/api/services/app/CMSService/GetAll";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_: any) => {
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
             return this.processGetAll(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<ListResultDtoOfCMSListDto>><any>_observableThrow(e);
+                    return <Observable<ListResultDtoOfCMScontentDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ListResultDtoOfCMSListDto>><any>_observableThrow(response_);
+                return <Observable<ListResultDtoOfCMScontentDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<ListResultDtoOfCMSListDto> {
+    protected processGetAll(response: HttpResponseBase): Observable<ListResultDtoOfCMScontentDto> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-                (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } };
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 ? ListResultDtoOfCMSListDto.fromJS(resultData200) : new ListResultDtoOfCMSListDto();
-                return _observableOf(result200);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                return throwException("A server error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                return throwException("A server error occurred.", status, _responseText, _headers);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? ListResultDtoOfCMScontentDto.fromJS(resultData200) : new ListResultDtoOfCMScontentDto();
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ListResultDtoOfCMSListDto>(<any>null);
+        return _observableOf<ListResultDtoOfCMScontentDto>(<any>null);
     }
 
     /**
-     * @param input (optional) 
+     * @param pageId (optional) 
      * @return Success
      */
-    insertOrUpdate(input: CreateRoleDto): Observable<CMScontentDto> {
-        let url_ = this.baseUrl + "/api/services/app/CMSService/InsertOrUpdateCMSContent";
+    getCMSContent(pageId: number | null | undefined): Observable<CMScontentDto> {
+        let url_ = this.baseUrl + "/api/services/app/CMS/GetCMSContent?";
+        if (pageId !== undefined)
+            url_ += "PageId=" + encodeURIComponent("" + pageId) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(input);
-
-        let options_: any = {
-            body: content_,
+        let options_ : any = {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
                 "Accept": "application/json"
             })
         };
 
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_: any) => {
-            return this.processInsertOrUpdate(response_);
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCMSContent(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processInsertOrUpdate(<any>response_);
+                    return this.processGetCMSContent(<any>response_);
                 } catch (e) {
                     return <Observable<CMScontentDto>><any>_observableThrow(e);
                 }
@@ -306,37 +233,80 @@ export class CMSServiceProxy {
         }));
     }
 
-    protected processInsertOrUpdate(response: HttpResponseBase): Observable<CMScontentDto> {
+    protected processGetCMSContent(response: HttpResponseBase): Observable<CMScontentDto> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-                (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } };
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 ? CMScontentDto.fromJS(resultData200) : new CMScontentDto();
-                return _observableOf(result200);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                return throwException("A server error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                return throwException("A server error occurred.", status, _responseText, _headers);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? CMScontentDto.fromJS(resultData200) : new CMScontentDto();
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
         return _observableOf<CMScontentDto>(<any>null);
     }
-}
 
+    /**
+     * @param input (optional) 
+     * @return Success
+     */
+    insertOrUpdateCMSContent(input: InsertOrUpdateCMSInput | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/CMS/InsertOrUpdateCMSContent";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(input);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processInsertOrUpdateCMSContent(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processInsertOrUpdateCMSContent(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processInsertOrUpdateCMSContent(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
 
 @Injectable()
 export class ConfigurationServiceProxy {
@@ -2084,6 +2054,191 @@ export interface IRegisterOutput {
     canLogin: boolean | undefined;
 }
 
+export class ListResultDtoOfCMScontentDto implements IListResultDtoOfCMScontentDto {
+    items: CMScontentDto[] | undefined;
+
+    constructor(data?: IListResultDtoOfCMScontentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            if (data["items"] && data["items"].constructor === Array) {
+                this.items = [];
+                for (let item of data["items"])
+                    this.items.push(CMScontentDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ListResultDtoOfCMScontentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ListResultDtoOfCMScontentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (this.items && this.items.constructor === Array) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): ListResultDtoOfCMScontentDto {
+        const json = this.toJSON();
+        let result = new ListResultDtoOfCMScontentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IListResultDtoOfCMScontentDto {
+    items: CMScontentDto[] | undefined;
+}
+
+export class CMScontentDto implements ICMScontentDto {
+    pageId: number | undefined;
+    pageName: string | undefined;
+    pageContent: string | undefined;
+    isDeleted: boolean | undefined;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    creationTime: moment.Moment | undefined;
+    creatorUserId: number | undefined;
+    id: string | undefined;
+
+    constructor(data?: ICMScontentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.pageId = data["pageId"];
+            this.pageName = data["pageName"];
+            this.pageContent = data["pageContent"];
+            this.isDeleted = data["isDeleted"];
+            this.deleterUserId = data["deleterUserId"];
+            this.deletionTime = data["deletionTime"] ? moment(data["deletionTime"].toString()) : <any>undefined;
+            this.lastModificationTime = data["lastModificationTime"] ? moment(data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = data["lastModifierUserId"];
+            this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = data["creatorUserId"];
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): CMScontentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CMScontentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["pageId"] = this.pageId;
+        data["pageName"] = this.pageName;
+        data["pageContent"] = this.pageContent;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): CMScontentDto {
+        const json = this.toJSON();
+        let result = new CMScontentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICMScontentDto {
+    pageId: number | undefined;
+    pageName: string | undefined;
+    pageContent: string | undefined;
+    isDeleted: boolean | undefined;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    creationTime: moment.Moment | undefined;
+    creatorUserId: number | undefined;
+    id: string | undefined;
+}
+
+export class InsertOrUpdateCMSInput implements IInsertOrUpdateCMSInput {
+    pageId: number;
+    pageName: string | undefined;
+    pageContent: string | undefined;
+
+    constructor(data?: IInsertOrUpdateCMSInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.pageId = data["pageId"];
+            this.pageName = data["pageName"];
+            this.pageContent = data["pageContent"];
+        }
+    }
+
+    static fromJS(data: any): InsertOrUpdateCMSInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new InsertOrUpdateCMSInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["pageId"] = this.pageId;
+        data["pageName"] = this.pageName;
+        data["pageContent"] = this.pageContent;
+        return data; 
+    }
+
+    clone(): InsertOrUpdateCMSInput {
+        const json = this.toJSON();
+        let result = new InsertOrUpdateCMSInput();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IInsertOrUpdateCMSInput {
+    pageId: number;
+    pageName: string | undefined;
+    pageContent: string | undefined;
+}
+
 export class ChangeUiThemeInput implements IChangeUiThemeInput {
     theme: string;
 
@@ -2127,118 +2282,11 @@ export interface IChangeUiThemeInput {
     theme: string;
 }
 
-
-
-
-
-export class ListResultDtoOfCMSListDto implements IListResultDtoOfCMSListDto {
-    items: CMScontentDto[];
-
-    constructor(data?: IListResultDtoOfCMSListDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            if (data["items"] && data["items"].constructor === Array) {
-                this.items = [] as any;
-                for (let item of data["items"])
-                    this.items.push(CMScontentDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ListResultDtoOfCMSListDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ListResultDtoOfCMSListDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (this.items && this.items.constructor === Array) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        return data;
-    }
-
-    clone(): ListResultDtoOfCMSListDto {
-        const json = this.toJSON();
-        let result = new ListResultDtoOfCMSListDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IListResultDtoOfCMSListDto {
-    items: CMScontentDto[];
-}
-
-export class CMScontentDto implements ICMScontentDto {
-    pageId: number;
-    pageName: string;
-    pageContent: string;
-
-    constructor(data?: ICMScontentDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.pageId = data["pageId"];
-            this.pageName = data["pageName"];
-            this.pageContent = data["pageContent"];
-        }
-    }
-
-    static fromJS(data: any): CMScontentDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CMScontentDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["pageId"] = this.pageId;
-        data["pageName"] = this.pageName;
-        data["pageContent"] = this.pageContent;
-        return data;
-    }
-
-    clone(): CMScontentDto {
-        const json = this.toJSON();
-        let result = new CMScontentDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ICMScontentDto {
-    pageId: number;
-    pageName: string;
-    pageContent: string;
-}
-
 export class CreateRoleDto implements ICreateRoleDto {
     name: string;
     displayName: string;
     normalizedName: string | undefined;
     description: string | undefined;
-    isStatic: boolean | undefined;
     permissions: string[] | undefined;
 
     constructor(data?: ICreateRoleDto) {
@@ -2256,7 +2304,6 @@ export class CreateRoleDto implements ICreateRoleDto {
             this.displayName = data["displayName"];
             this.normalizedName = data["normalizedName"];
             this.description = data["description"];
-            this.isStatic = data["isStatic"];
             if (data["permissions"] && data["permissions"].constructor === Array) {
                 this.permissions = [];
                 for (let item of data["permissions"])
@@ -2278,7 +2325,6 @@ export class CreateRoleDto implements ICreateRoleDto {
         data["displayName"] = this.displayName;
         data["normalizedName"] = this.normalizedName;
         data["description"] = this.description;
-        data["isStatic"] = this.isStatic;
         if (this.permissions && this.permissions.constructor === Array) {
             data["permissions"] = [];
             for (let item of this.permissions)
@@ -2300,7 +2346,6 @@ export interface ICreateRoleDto {
     displayName: string;
     normalizedName: string | undefined;
     description: string | undefined;
-    isStatic: boolean | undefined;
     permissions: string[] | undefined;
 }
 
@@ -2309,7 +2354,6 @@ export class RoleDto implements IRoleDto {
     displayName: string;
     normalizedName: string | undefined;
     description: string | undefined;
-    isStatic: boolean | undefined;
     permissions: string[] | undefined;
     id: number | undefined;
 
@@ -2328,7 +2372,6 @@ export class RoleDto implements IRoleDto {
             this.displayName = data["displayName"];
             this.normalizedName = data["normalizedName"];
             this.description = data["description"];
-            this.isStatic = data["isStatic"];
             if (data["permissions"] && data["permissions"].constructor === Array) {
                 this.permissions = [];
                 for (let item of data["permissions"])
@@ -2351,7 +2394,6 @@ export class RoleDto implements IRoleDto {
         data["displayName"] = this.displayName;
         data["normalizedName"] = this.normalizedName;
         data["description"] = this.description;
-        data["isStatic"] = this.isStatic;
         if (this.permissions && this.permissions.constructor === Array) {
             data["permissions"] = [];
             for (let item of this.permissions)
@@ -2374,7 +2416,6 @@ export interface IRoleDto {
     displayName: string;
     normalizedName: string | undefined;
     description: string | undefined;
-    isStatic: boolean | undefined;
     permissions: string[] | undefined;
     id: number | undefined;
 }

@@ -5,8 +5,10 @@ using Abp.Domain.Repositories;
 using Abp.UI;
 using MellowoodMedical.CMSES.Dtos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 
 namespace MellowoodMedical.CMSES
@@ -27,6 +29,8 @@ namespace MellowoodMedical.CMSES
 		{
 			var cmses = await _cmsRepository
 				.GetAll()
+				.GroupBy(p => p.PageId)
+				.Select(g => g.LastOrDefault())
 				.ToListAsync();
 
 			if (@cmses == null)
@@ -42,7 +46,7 @@ namespace MellowoodMedical.CMSES
 			var cms = await _cmsRepository
 				.GetAll()
 				.Where(e => e.PageId == input.PageId)
-				.FirstOrDefaultAsync();
+				.LastOrDefaultAsync();
 
 			if (@cms == null)
 			{
